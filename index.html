@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>తపన — Thapana</title>
+  <meta name="description" content="Sravan's daily poetry blog — longing written in words." />
+  <meta property="og:title" content="తపన" />
+  <meta property="og:description" content="Daily poetry by Sravan — longing, life, and light." />
+  <meta property="og:type" content="website" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tiro+Telugu:ital@0;1&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Reset & base ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #0d0d0f;
+      --surface:     #13131a;
+      --surface2:    #1a1a24;
+      --border:      #2a2a3a;
+      --accent:      #c084fc;      /* violet — longing */
+      --accent2:     #818cf8;      /* indigo */
+      --gold:        #fbbf24;
+      --text:        #e2e0f0;
+      --muted:       #7c7a9a;
+      --tag-bg:      #1e1b30;
+      --tag-text:    #a78bfa;
+      --font-te:     'Tiro Telugu', serif;
+      --font-head:   'Playfair Display', Georgia, serif;
+      --font-body:   'Inter', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── Stars background ───────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(168,85,247,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(99,102,241,0.05) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Header ─────────────────────────────────────────────── */
+    header {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 5rem 1.5rem 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .site-title {
+      font-family: var(--font-te);
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      font-weight: 400;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--gold) 50%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+      margin-bottom: 0.4rem;
+    }
+
+    .site-subtitle {
+      font-family: var(--font-head);
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .site-byline {
+      font-size: 0.85rem;
+      color: var(--muted);
+      opacity: 0.7;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ── Nav / Search ───────────────────────────────────────── */
+    .nav-bar {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .search-wrap {
+      position: relative;
+      width: min(380px, 100%);
+    }
+
+    .search-wrap input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.5rem 1rem 0.5rem 2.6rem;
+      color: var(--text);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-wrap input::placeholder { color: var(--muted); }
+    .search-wrap input:focus { border-color: var(--accent); }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 0.9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      width: 1rem;
+      height: 1rem;
+    }
+
+    /* ── Tag filters ────────────────────────────────────────── */
+    .tag-bar {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      padding: 0.5rem 1.5rem 1.5rem;
+    }
+
+    .tag-pill {
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: var(--font-te);
+      transition: all 0.2s;
+    }
+
+    .tag-pill:hover,
+    .tag-pill.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(192,132,252,0.1);
+    }
+
+    /* ── Poem grid ──────────────────────────────────────────── */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 6rem;
+      display: grid;
+      gap: 2rem;
+    }
+
+    /* ── Poem card ──────────────────────────────────────────── */
+    .poem-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 1.2rem;
+      padding: 2.2rem 2.5rem;
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .poem-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .poem-card:hover {
+      border-color: rgba(192,132,252,0.3);
+      box-shadow: 0 0 40px rgba(192,132,252,0.07);
+      transform: translateY(-2px);
+    }
+
+    .poem-card:hover::before { transform: scaleX(1); }
+
+    .poem-card.expanded {
+      border-color: rgba(192,132,252,0.4);
+      box-shadow: 0 0 60px rgba(192,132,252,0.1);
+    }
+
+    .poem-card.expanded::before { transform: scaleX(1); }
+
+    /* Card header */
+    .poem-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .poem-title {
+      font-family: var(--font-te);
+      font-size: 1.5rem;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .poem-title-en {
+      font-family: var(--font-head);
+      font-style: italic;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    .poem-num {
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: var(--surface2);
+      border-radius: 6px;
+      padding: 0.2rem 0.5rem;
+      font-family: monospace;
+      flex-shrink: 0;
+    }
+
+    /* Body */
+    .poem-body {
+      font-family: var(--font-te);
+      font-size: 1.05rem;
+      line-height: 2;
+      color: var(--text);
+      white-space: pre-line;
+      display: none;
+      margin: 1.2rem 0;
+      padding: 1.2rem 1.5rem;
+      background: var(--surface2);
+      border-radius: 0.75rem;
+      border-left: 3px solid var(--accent);
+      position: relative;
+    }
+
+    .poem-body.visible { display: block; }
+
+    .poem-preview {
+      font-family: var(--font-te);
+      font-size: 0.95rem;
+      color: var(--muted);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-height: 1.8;
+    }
+
+    .poem-preview.hidden { display: none; }
+
+    /* Footer */
+    .poem-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .poem-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .poem-tag {
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      font-family: var(--font-te);
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+    }
+
+    .poem-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .poem-date::before { content: '📅 '; }
+
+    .read-toggle {
+      font-size: 0.8rem;
+      color: var(--accent);
+      background: none;
+      border: 1px solid rgba(192,132,252,0.3);
+      border-radius: 999px;
+      padding: 0.2rem 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--font-body);
+    }
+
+    .read-toggle:hover {
+      background: rgba(192,132,252,0.1);
+      border-color: var(--accent);
+    }
+
+    /* ── Quote decoration ───────────────────────────────────── */
+    .poem-body::after {
+      content: '🪷';
+      position: absolute;
+      bottom: 0.7rem;
+      right: 1rem;
+      font-size: 1rem;
+      opacity: 0.5;
+    }
+
+    /* ── Empty state ────────────────────────────────────────── */
+    .empty {
+      text-align: center;
+      padding: 4rem 1rem;
+      color: var(--muted);
+    }
+
+    .empty .emoji { font-size: 3rem; margin-bottom: 1rem; }
+
+    /* ── Footer ─────────────────────────────────────────────── */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2rem 1rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    footer a {
+      color: var(--accent2);
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+
+    .footer-poem {
+      font-family: var(--font-te);
+      font-style: italic;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      color: var(--muted);
+    }
+
+    /* ── Count badge ────────────────────────────────────────── */
+    .count-badge {
+      display: inline-block;
+      background: rgba(192,132,252,0.12);
+      color: var(--accent);
+      border-radius: 999px;
+      padding: 0.15rem 0.6rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      margin-left: 0.4rem;
+    }
+
+    /* ── Stats bar ──────────────────────────────────────────── */
+    .stats-bar {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      padding: 1.2rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-val {
+      font-size: 1.6rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .poem-card { padding: 1.5rem 1.2rem; }
+      .stats-bar { gap: 1.5rem; }
+      .poem-title { font-size: 1.25rem; }
+    }
+
+    /* ── Scrollbar ──────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="site-title">తపన</div>
+    <div class="site-subtitle">Thapana — Longing, written daily</div>
+    <div class="site-byline">by Sravan &nbsp;·&nbsp; Every night at 10 PM</div>
+  </header>
+
+  <!-- Stats -->
+  <div class="stats-bar" id="statsBar" style="display:none">
+    <div class="stat">
+      <div class="stat-val" id="statCount">0</div>
+      <div class="stat-label">Poems</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" id="statStreak">0</div>
+      <div class="stat-label">Day Streak</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" id="statMonths">0</div>
+      <div class="stat-label">Months</div>
+    </div>
+  </div>
+
+  <!-- Search + tag filters -->
+  <div class="nav-bar">
+    <div class="search-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" id="searchInput" placeholder="కవిత వెతకండి..." aria-label="Search poems" />
+    </div>
+  </div>
+
+  <div class="tag-bar" id="tagBar"></div>
+
+  <!-- Poem cards -->
+  <main id="poemGrid"></main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-poem">ప్రతి రాత్రి ఒక తపన — every night, one longing.</div>
+    Built with ❤️ by <a href="https://github.com/sravandevops19" target="_blank">Sravan</a> &amp;
+    powered by <a href="#" target="_blank">LEO AI Agent</a>
+  </footer>
+
+  <script>
+    /* ──────────────────────────────────────────────
+       తపన Blog — client-side JS
+       Loads poems.json, renders cards, search/filter
+    ─────────────────────────────────────────────── */
+    let allPoems = [];
+    let activeTag = null;
+
+    // ── Fetch poems ──────────────────────────────
+    async function loadPoems() {
+      try {
+        const res = await fetch(`poems.json?v=${Date.now()}`);
+        allPoems = await res.json();
+        // Sort newest first
+        allPoems.sort((a, b) => b.date.localeCompare(a.date));
+        renderStats();
+        renderTags();
+        renderPoems(allPoems);
+      } catch (e) {
+        document.getElementById('poemGrid').innerHTML =
+          `<div class="empty"><div class="emoji">🌙</div><p>కవితలు లోడ్ అవ్వలేదు. Refresh చేయండి.</p></div>`;
+      }
+    }
+
+    // ── Stats ────────────────────────────────────
+    function renderStats() {
+      const bar = document.getElementById('statsBar');
+      if (allPoems.length === 0) return;
+      bar.style.display = 'flex';
+
+      document.getElementById('statCount').textContent = allPoems.length;
+
+      // Streak: consecutive days from today
+      const dates = new Set(allPoems.map(p => p.date));
+      let streak = 0;
+      let d = new Date();
+      while (true) {
+        const key = d.toISOString().slice(0, 10);
+        if (!dates.has(key)) break;
+        streak++;
+        d.setDate(d.getDate() - 1);
+      }
+      document.getElementById('statStreak').textContent = streak + '🔥';
+
+      // Unique months
+      const months = new Set(allPoems.map(p => p.date.slice(0, 7)));
+      document.getElementById('statMonths').textContent = months.size;
+    }
+
+    // ── Tags ─────────────────────────────────────
+    function renderTags() {
+      const tagBar = document.getElementById('tagBar');
+      const allTags = [...new Set(allPoems.flatMap(p => p.tags || []))];
+      if (allTags.length === 0) return;
+
+      const allPill = document.createElement('button');
+      allPill.className = 'tag-pill active';
+      allPill.textContent = 'అన్నీ';
+      allPill.addEventListener('click', () => filterTag(null, allPill));
+      tagBar.appendChild(allPill);
+
+      allTags.forEach(tag => {
+        const pill = document.createElement('button');
+        pill.className = 'tag-pill';
+        pill.textContent = tag;
+        pill.addEventListener('click', () => filterTag(tag, pill));
+        tagBar.appendChild(pill);
+      });
+    }
+
+    function filterTag(tag, el) {
+      activeTag = tag;
+      document.querySelectorAll('.tag-pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+      applyFilters();
+    }
+
+    // ── Search ───────────────────────────────────
+    document.getElementById('searchInput').addEventListener('input', applyFilters);
+
+    function applyFilters() {
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      let filtered = allPoems;
+      if (activeTag) filtered = filtered.filter(p => (p.tags || []).includes(activeTag));
+      if (q) {
+        filtered = filtered.filter(p =>
+          (p.title || '').toLowerCase().includes(q) ||
+          (p.title_en || '').toLowerCase().includes(q) ||
+          (p.body || '').toLowerCase().includes(q) ||
+          (p.tags || []).some(t => t.toLowerCase().includes(q))
+        );
+      }
+      renderPoems(filtered);
+    }
+
+    // ── Render poems ─────────────────────────────
+    function renderPoems(poems) {
+      const grid = document.getElementById('poemGrid');
+      grid.innerHTML = '';
+
+      if (poems.length === 0) {
+        grid.innerHTML = `<div class="empty">
+          <div class="emoji">🌸</div>
+          <p>ఆ కవిత ఇంకా రాయబడలేదు.</p>
+        </div>`;
+        return;
+      }
+
+      poems.forEach((poem, idx) => {
+        const card = document.createElement('article');
+        card.className = 'poem-card';
+        card.setAttribute('data-id', poem.id);
+
+        // Format date nicely
+        const dateStr = formatDate(poem.date);
+
+        // Tags HTML
+        const tagsHtml = (poem.tags || [])
+          .map(t => `<span class="poem-tag">${t}</span>`)
+          .join('');
+
+        // First two lines as preview
+        const lines = (poem.body || '').split('\n').filter(l => l.trim());
+        const preview = lines.slice(0, 2).join('\n');
+
+        card.innerHTML = `
+          <div class="poem-header">
+            <div>
+              <div class="poem-title">${poem.title || '?'}</div>
+              ${poem.title_en ? `<div class="poem-title-en">${poem.title_en}</div>` : ''}
+            </div>
+            <span class="poem-num">#${String(allPoems.indexOf(poem) + 1).padStart(3,'0')}</span>
+          </div>
+          <div class="poem-preview" id="prev-${poem.id}">${preview}</div>
+          <pre class="poem-body" id="body-${poem.id}">${poem.body || ''}</pre>
+          <div class="poem-footer">
+            <div class="poem-tags">${tagsHtml}</div>
+            <div class="poem-meta">
+              <span class="poem-date">${dateStr}</span>
+              <button class="read-toggle" id="btn-${poem.id}" onclick="togglePoem('${poem.id}')">చదవండి ✦</button>
+            </div>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+    }
+
+    // ── Toggle expand ────────────────────────────
+    function togglePoem(id) {
+      const body = document.getElementById(`body-${id}`);
+      const prev = document.getElementById(`prev-${id}`);
+      const btn  = document.getElementById(`btn-${id}`);
+      const card = body.closest('.poem-card');
+
+      const isOpen = body.classList.contains('visible');
+      if (isOpen) {
+        body.classList.remove('visible');
+        prev.classList.remove('hidden');
+        card.classList.remove('expanded');
+        btn.textContent = 'చదవండి ✦';
+      } else {
+        body.classList.add('visible');
+        prev.classList.add('hidden');
+        card.classList.add('expanded');
+        btn.textContent = 'మూయండి ✕';
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    // ── Date formatter ───────────────────────────
+    function formatDate(iso) {
+      if (!iso) return '';
+      const d = new Date(iso + 'T00:00:00');
+      return d.toLocaleDateString('te-IN', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    // ── Init ─────────────────────────────────────
+    loadPoems();
+  </script>
+</body>
+</html>
